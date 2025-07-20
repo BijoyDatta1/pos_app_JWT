@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Helper\JWTToken;
+use App\Mail\SendOtpMail;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use PHPUnit\Framework\Constraint\Count;
 
@@ -70,6 +73,82 @@ class UserAutintication extends Controller
                 'status' => false,
                 'message' => "Email and Password Not match"
             ]);
+        }
+    }
+
+    public function sendOtp(Request $request){
+        // return "hello";
+        // die();
+        $userValidation = Validator::make($request->all(),[
+            'email' => 'required|email',
+        ]);
+        if($userValidation->fails()){
+            return response()->json([
+                'status' => false,
+                'message' => 'please provide valide email',
+            ]);
+
+        }
+
+        $otp = rand(10000,99999);
+        $user = User::where('email', $request->email)->first();
+
+        if($user){
+            //update otp
+            User::where('email','=', $request->email)->update(['otp' => $otp]);
+
+            //send otp
+            Mail::to($user->email)->send(new SendOtpMail($otp));
+            return response()->json([
+                'status' => true,
+                'message' => 'otp send successfully'
+            ],201);
+        }else{
+            return response()->json([
+                'status' => false,
+                'message' => "Email Not found for Otp"
+            ],401);
+        }
+    }
+
+    public function verifyOtp(Request $request){
+        
+        $user = User::where('email','=',$request->email)->where('otp','=',$request->otp)->first();
+
+        if($user){
+            //update otp
+            $user->update(['otp' => 0]);
+            //createToken
+            $token = JWTToken::createToken($user->email,10);
+            return response()->json([
+                'status' => true,
+                'message' => 'otp verified successfully',
+                'token' => $token
+            ],201);
+
+        }else{
+            return response()->json([
+                'status' => false,
+                'message' => "Invalid otp"
+            ],401);
+        }
+
+    }
+
+    public function resetPassword(Request $request){
+        try{
+            $email = $request->header('email');
+            User::where('email', '=' , $email)->update(['password', '=', $request->password]);
+            return response()->json([
+                'status' => true,
+                'message' => 'password reset successfully'
+            ],201);
+        }catch(Exception $e){
+            return response()->json([
+                'status' => false,
+                'exception message' => $e->getMessage(),
+                'message' => 'password reset failed'
+            ],401);
         }
     }
 }
