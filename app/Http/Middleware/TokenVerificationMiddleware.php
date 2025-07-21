@@ -18,10 +18,6 @@ class TokenVerificationMiddleware
     {
         $token = $request->header('token');
         $result = JWTToken::tokenVerify($token);
-        return response()->json([
-            'status' => $result
-        ]);
-        die();
         if($result == 'Unauthorize'){
             return response()->json([
                 'status' => false,
