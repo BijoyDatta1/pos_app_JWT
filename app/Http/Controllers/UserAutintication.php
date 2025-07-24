@@ -13,6 +13,29 @@ use PHPUnit\Framework\Constraint\Count;
 
 class UserAutintication extends Controller
 {
+
+//     Route::get('/loginpage',[UserAutintication::class,'loginPage']);
+// Route::get('/registationpage',[UserAutintication::class,'registationPage']);
+// Route::get('/sendotppage',[UserAutintication::class,'sendotpPage']);
+// Route::get('/verifyotppage',[UserAutintication::class,'verifyotpPage']);
+// Route::get('/resetpasswordpage',[UserAutintication::class,'resetpasswordPage']);
+
+    public function loginPage(){
+        return view('pages.auth.login-page');
+    }
+    public function registationPage(){
+        return view('pages.auth.registration-page');
+    }
+    public function sendotpPage(){
+        return view('pages.auth.send-otp-page');
+    }
+    public function verifyotpPage(){
+        return view('pages.auth.verify-otp-page');
+    }
+    public function resetpasswordPage(){
+        return view('pages.auth.reset-pass-page');
+    }
+
     //
     public function registation(Request $request){
         $userValidation = Validator::make($request->all(),[
@@ -138,7 +161,7 @@ class UserAutintication extends Controller
     public function resetPassword(Request $request){
         try{
             $email = $request->header('email');
-            User::where('email', '=' , $email)->update(['password', '=', $request->password]);
+            User::where('email', '=' , $email)->update(['password'=> $request->password]);
             return response()->json([
                 'status' => true,
                 'message' => 'password reset successfully'

@@ -23,4 +23,9 @@ Route::post('/sendotp',[UserAutintication::class,'sendOtp']);
 Route::post('/verifyotp',[UserAutintication::class,'verifyOtp']);
 Route::post('/resetpassword',[UserAutintication::class,'resetPassword'])->middleware(TokenVerificationMiddleware::class);
 
-Route::post('/chacktoken',[UserAutintication::class,'chackToken']);
+//all Auth Page Route
+Route::get('/loginpage',[UserAutintication::class,'loginPage']);
+Route::get('/registationpage',[UserAutintication::class,'registationPage']);
+Route::get('/sendotppage',[UserAutintication::class,'sendotpPage']);
+Route::get('/verifyotppage',[UserAutintication::class,'verifyotpPage']);
+Route::get('/resetpasswordpage',[UserAutintication::class,'resetpasswordPage']);
