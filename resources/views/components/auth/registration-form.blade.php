@@ -30,7 +30,7 @@
                         </div>
                         <div class="row m-0 p-0">
                             <div class="col-md-4 p-2">
-                                <button  class="btn mt-3 w-100  bg-gradient-primary">Complete</button>
+                                <button onclick="registation()" class="btn mt-3 w-100  bg-gradient-primary">Complete</button>
                             </div>
                         </div>
                     </div>
@@ -39,12 +39,49 @@
         </div>
     </div>
 </div>
-
 <script>
+    async function registation() {
+        let email = document.getElementById('email').value;
+        let firstName = document.getElementById('firstName').value;
+        let lastName = document.getElementById('lastName').value;
+        let mobile = document.getElementById('mobile').value;
+        let password = document.getElementById('password').value;
 
-
-  async function onRegistration() {
-
-    
+        if(email.length === 0){
+            errorToast('Please Enter The Email')
+        }else if(firstName.length === 0){
+            errorToast('Please Enter The First Name')
+        }else if(lastName.length === 0){
+            errorToast('Please Enter The Last Name')
+        }else if(mobile.length === 0){
+            errorToast('Please Enter The Mobile Number')
+        }else if(password.length === 0){
+            errorToast('Please Enter The Password')
+        }else{
+            showLoader();
+            let res=await axios.post("/api/registation",{
+                email:email,
+                firstName:firstName,
+                lastName:lastName,
+                mobile:mobile,
+                password:password
+            })
+            hideLoader();
+            if(res.status === 200 && res.data['status'] === 'success'){
+                successToast(res.data['message']);
+                setTimeout(() => {
+                    window.location.href = "/loginpage";
+                },2000);
+            }else{
+                // errorToast(res.data.message)
+                let data = res.data.message;
+                for (let key in data) {
+                errorToast(data[key]);
+                }
+                
+            }
+        }
     }
+
 </script>
+

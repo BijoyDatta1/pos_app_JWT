@@ -14,11 +14,10 @@ use PHPUnit\Framework\Constraint\Count;
 class UserAutintication extends Controller
 {
 
-//     Route::get('/loginpage',[UserAutintication::class,'loginPage']);
-// Route::get('/registationpage',[UserAutintication::class,'registationPage']);
-// Route::get('/sendotppage',[UserAutintication::class,'sendotpPage']);
-// Route::get('/verifyotppage',[UserAutintication::class,'verifyotpPage']);
-// Route::get('/resetpasswordpage',[UserAutintication::class,'resetpasswordPage']);
+
+    public function dashboard(){
+        return view('pages.dashboard.dashboard-page');
+    }
 
     public function loginPage(){
         return view('pages.auth.login-page');
@@ -48,10 +47,9 @@ class UserAutintication extends Controller
 
         if($userValidation->fails()){
             return response()->json([
-                'status' => false,
-                'message' => 'Validation failed',
-                'errors' => $userValidation->errors()
-            ], 401);
+                'status' => 'failed',
+                'message' => $userValidation->errors(),
+            ]);
         }
 
         $user = User::create([
@@ -62,10 +60,10 @@ class UserAutintication extends Controller
             'mobile' => $request->mobile
         ]);
         return response()->json([
-            'status' => true,
+            'status' => 'success',
             'message' => 'User created successfully',
             'user' => $user
-        ], 201);
+        ], 200);
 
     }
 
