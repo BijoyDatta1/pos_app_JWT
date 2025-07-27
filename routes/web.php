@@ -23,4 +23,4 @@ Route::get('/registationpage',[UserAutintication::class,'registationPage']);
 Route::get('/sendotppage',[UserAutintication::class,'sendotpPage']);
 Route::get('/verifyotppage',[UserAutintication::class,'verifyotpPage']);
 Route::get('/resetpasswordpage',[UserAutintication::class,'resetpasswordPage']);
-Route::get('/dashboard',[UserAutintication::class,'dashboard']);
+Route::get('/dashboard',[UserAutintication::class,'dashboard'])->middleware(TokenVerificationMiddleware::class);

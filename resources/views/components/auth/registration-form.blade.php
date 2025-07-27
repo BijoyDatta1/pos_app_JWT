@@ -75,10 +75,15 @@
             }else{
                 // errorToast(res.data.message)
                 let data = res.data.message;
-                for (let key in data) {
-                errorToast(data[key]);
-                }
+                console.log(data);
                 
+                // if(typeof data === 'object'){
+                //     for (let key in data) {
+                //         errorToast(data[key]);
+                //     }
+                // }else{
+                //     errorToast(data);
+                // }
             }
         }
     }

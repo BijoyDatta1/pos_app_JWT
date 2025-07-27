@@ -70,14 +70,13 @@ class UserAutintication extends Controller
     public function login(Request $request){
         $userValidation = Validator::make($request->all(),[
             'email' => 'required|email',
-            'password' => 'required'
+            'password' => 'required|min:6'
         ]);
         if($userValidation->fails()){
             return response()->json([
-                'status' => false,
-                'message' => 'Validation failed',
-                'errors' => $userValidation->errors()
-            ],401);
+                'status' => 'failed',
+                'message' => $userValidation->errors()
+            ]);
         }
 
         $user = User::where('email', $request->email)->where('password', $request->password)->first();
@@ -85,13 +84,12 @@ class UserAutintication extends Controller
         if($user){
             $token = JWTToken::createToken($user->email);
             return response()->json([
-                'status' => true,
+                'status' => 'success',
                 'message' => 'login successfully',
-                'token' => $token
-            ],201);
+            ],200)->cookie('token',$token,60);
         }else{
             return response()->json([
-                'status' => false,
+                'status' => 'failed',
                 'message' => "Email and Password Not match"
             ]);
         }
