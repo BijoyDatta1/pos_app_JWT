@@ -14,7 +14,11 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
+Route::post('/registation',[UserAutintication::class,'registation']);
+Route::post('/login',[UserAutintication::class,'login']);
+Route::post('/sendotp',[UserAutintication::class,'sendOtp']);
+Route::post('/verifyotp',[UserAutintication::class,'verifyOtp']);
+Route::post('/resetpassword',[UserAutintication::class,'resetPassword'])->middleware(TokenVerificationMiddleware::class);
 
 
 

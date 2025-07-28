@@ -8,7 +8,7 @@
                     <label>Your email address</label>
                     <input id="email" placeholder="User Email" class="form-control" type="email"/>
                     <br/>
-                    <button   class="btn w-100 float-end bg-gradient-primary">Next</button>
+                    <button onclick="sendOtp()"  class="btn w-100 float-end bg-gradient-primary">Next</button>
                 </div>
             </div>
         </div>
@@ -16,7 +16,35 @@
 </div>
 
 <script>
-   async function VerifyEmail() {
-       
+    async function sendOtp() {
+        let email = document.getElementById('email').value;
+
+    
+        if(email.length == 0){
+            errorToast('Please Enter The Email')
+        }else{
+            showLoader();
+            let res = await axios.post("/sendotp",{
+                email:email
+            });
+            hideLoader();
+            if(res.status === 200 && res.data['status'] === 'success'){
+                sessionStorage.setItem('email', email);
+                 successToast(res.data['message']);
+                setTimeout(() => {
+                    window.location.href = "/verifyotppage";
+                }, 2000);
+            }else{
+                let data = res.data.message;
+
+                if(typeof data === 'object'){
+                    for (let key in data) {
+                        errorToast(data[key]);
+                    }
+                }else{
+                    errorToast(data);
+                }
+            }
+        }
     }
 </script>

@@ -103,7 +103,7 @@ class UserAutintication extends Controller
         ]);
         if($userValidation->fails()){
             return response()->json([
-                'status' => false,
+                'status' => 'faield',
                 'message' => 'please provide valide email',
             ]);
 
@@ -119,20 +119,22 @@ class UserAutintication extends Controller
             //send otp
             Mail::to($user->email)->send(new SendOtpMail($otp));
             return response()->json([
-                'status' => true,
+                'status' => 'success',
                 'message' => 'otp send successfully'
-            ],201);
+            ],200);
         }else{
             return response()->json([
-                'status' => false,
+                'status' => 'faield',
                 'message' => "Email Not found for Otp"
-            ],401);
+            ]);
         }
     }
 
     public function verifyOtp(Request $request){
+
+        $email = session('email');
         
-        $user = User::where('email','=',$request->email)->where('otp','=',$request->otp)->first();
+        $user = User::where('email','=',$email)->where('otp','=',$request->otp)->first();
 
         if($user){
             //update otp
@@ -140,16 +142,15 @@ class UserAutintication extends Controller
             //createToken
             $token = JWTToken::createToken($user->email,10);
             return response()->json([
-                'status' => true,
+                'status' => 'success',
                 'message' => 'otp verified successfully',
-                'token' => $token
-            ],201);
+            ],200)->cookie('token',$token,10);
 
         }else{
             return response()->json([
-                'status' => false,
+                'status' => 'failed',
                 'message' => "Invalid otp"
-            ],401);
+            ]);
         }
 
     }
