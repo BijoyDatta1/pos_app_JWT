@@ -8,7 +8,7 @@
                     <label>4 Digit Code Here</label>
                     <input id="otp" placeholder="Code" class="form-control" type="text"/>
                     <br/>
-                    <button onclick="verifyOtp()" class="btn w-100 float-end bg-gradient-primary">Next</button>
+                    <button onclick="VerityOtp()" class="btn w-100 float-end bg-gradient-primary">Next</button>
                 </div>
             </div>
         </div>
@@ -24,10 +24,12 @@
         }else{
             showLoader();
             let res = await axios.post("/verifyotp",{
-                otp: otp
+                otp: otp,
+                email:sessionStorage.getItem('email')
             });
             hideLoader();
-            if(res.status === 200 && res.data['success']){
+            if(res.status === 200 && res.data['status'] === 'success'){
+                sessionStorage.clear();
                 successToast(res.data['message']);
                 setTimeout(() => {
                     window.location.href = "/resetpasswordpage";

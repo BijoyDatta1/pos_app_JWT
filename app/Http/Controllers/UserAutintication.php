@@ -131,10 +131,8 @@ class UserAutintication extends Controller
     }
 
     public function verifyOtp(Request $request){
-
-        $email = session('email');
         
-        $user = User::where('email','=',$email)->where('otp','=',$request->otp)->first();
+        $user = User::where('email','=',$request->email)->where('otp','=',$request->otp)->first();
 
         if($user){
             //update otp
@@ -160,12 +158,12 @@ class UserAutintication extends Controller
             $email = $request->header('email');
             User::where('email', '=' , $email)->update(['password'=> $request->password]);
             return response()->json([
-                'status' => true,
+                'status' => "success",
                 'message' => 'password reset successfully'
-            ],201);
+            ],200);
         }catch(Exception $e){
             return response()->json([
-                'status' => false,
+                'status' => 'failed',
                 'exception message' => $e->getMessage(),
                 'message' => 'password reset failed'
             ],401);
