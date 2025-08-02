@@ -15,29 +15,36 @@ class UserAutintication extends Controller
 {
 
 
-    public function dashboard(){
+    public function dashboard()
+    {
         return view('pages.dashboard.dashboard-page');
     }
 
-    public function loginPage(){
+    public function loginPage()
+    {
         return view('pages.auth.login-page');
     }
-    public function registationPage(){
+    public function registationPage()
+    {
         return view('pages.auth.registration-page');
     }
-    public function sendotpPage(){
+    public function sendotpPage()
+    {
         return view('pages.auth.send-otp-page');
     }
-    public function verifyotpPage(){
+    public function verifyotpPage()
+    {
         return view('pages.auth.verify-otp-page');
     }
-    public function resetpasswordPage(){
+    public function resetpasswordPage()
+    {
         return view('pages.auth.reset-pass-page');
     }
 
     //
-    public function registation(Request $request){
-        $userValidation = Validator::make($request->all(),[
+    public function registation(Request $request)
+    {
+        $userValidation = Validator::make($request->all(), [
             'firstName' => 'required',
             'lastName' => 'required',
             'email' => 'required|email|unique:users',
@@ -45,7 +52,7 @@ class UserAutintication extends Controller
             'mobile' => 'required',
         ]);
 
-        if($userValidation->fails()){
+        if ($userValidation->fails()) {
             return response()->json([
                 'status' => 'failed',
                 'message' => $userValidation->errors(),
@@ -64,15 +71,15 @@ class UserAutintication extends Controller
             'message' => 'User created successfully',
             'user' => $user
         ], 200);
-
     }
 
-    public function login(Request $request){
-        $userValidation = Validator::make($request->all(),[
+    public function login(Request $request)
+    {
+        $userValidation = Validator::make($request->all(), [
             'email' => 'required|email',
             'password' => 'required|min:6'
         ]);
-        if($userValidation->fails()){
+        if ($userValidation->fails()) {
             return response()->json([
                 'status' => 'failed',
                 'message' => $userValidation->errors()
@@ -81,13 +88,13 @@ class UserAutintication extends Controller
 
         $user = User::where('email', $request->email)->where('password', $request->password)->first();
 
-        if($user){
+        if ($user) {
             $token = JWTToken::createToken($user->email);
             return response()->json([
                 'status' => 'success',
                 'message' => 'login successfully',
-            ],200)->cookie('token',$token,60);
-        }else{
+            ], 200)->cookie('token', $token, 60);
+        } else {
             return response()->json([
                 'status' => 'failed',
                 'message' => "Email and Password Not match"
@@ -95,34 +102,34 @@ class UserAutintication extends Controller
         }
     }
 
-    public function sendOtp(Request $request){
+    public function sendOtp(Request $request)
+    {
         // return "hello";
         // die();
-        $userValidation = Validator::make($request->all(),[
+        $userValidation = Validator::make($request->all(), [
             'email' => 'required|email',
         ]);
-        if($userValidation->fails()){
+        if ($userValidation->fails()) {
             return response()->json([
                 'status' => 'faield',
                 'message' => 'please provide valide email',
             ]);
-
         }
 
-        $otp = rand(10000,99999);
+        $otp = rand(10000, 99999);
         $user = User::where('email', $request->email)->first();
 
-        if($user){
+        if ($user) {
             //update otp
-            User::where('email','=', $request->email)->update(['otp' => $otp]);
+            User::where('email', '=', $request->email)->update(['otp' => $otp]);
 
             //send otp
             Mail::to($user->email)->send(new SendOtpMail($otp));
             return response()->json([
                 'status' => 'success',
                 'message' => 'otp send successfully'
-            ],200);
-        }else{
+            ], 200);
+        } else {
             return response()->json([
                 'status' => 'faield',
                 'message' => "Email Not found for Otp"
@@ -130,45 +137,46 @@ class UserAutintication extends Controller
         }
     }
 
-    public function verifyOtp(Request $request){
-        
-        $user = User::where('email','=',$request->email)->where('otp','=',$request->otp)->first();
+    public function verifyOtp(Request $request)
+    {
 
-        if($user){
-            //update otp
+        $user = User::where('email', '=', $request->email)->where('otp', '=', $request->otp)->first();
+        if ($user) {
             $user->update(['otp' => 0]);
             //createToken
-            $token = JWTToken::createToken($user->email,10);
+            $token = JWTToken::createToken($user->email, 10);
             return response()->json([
                 'status' => 'success',
                 'message' => 'otp verified successfully',
-            ],200)->cookie('token',$token,10);
-
-        }else{
+            ], 200)->cookie('token', $token, 10);
+        } else {
             return response()->json([
                 'status' => 'failed',
                 'message' => "Invalid otp"
             ]);
         }
-
     }
 
-    public function resetPassword(Request $request){
-        try{
+    public function resetPassword(Request $request)
+    {
+        try {
             $email = $request->header('email');
-            User::where('email', '=' , $email)->update(['password'=> $request->password]);
+            User::where('email', '=', $email)->update(['password' => $request->password]);
             return response()->json([
                 'status' => "success",
                 'message' => 'password reset successfully'
-            ],200);
-        }catch(Exception $e){
+            ], 200);
+        } catch (Exception $e) {
             return response()->json([
                 'status' => 'failed',
                 'exception message' => $e->getMessage(),
                 'message' => 'password reset failed'
-            ],401);
+            ], 401);
         }
     }
 
+    public function logout()
+    {
+        return redirect('/loginpage')->cookie('token', -1);
+    }
 }
-

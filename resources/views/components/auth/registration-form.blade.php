@@ -59,7 +59,7 @@
             errorToast('Please Enter The Password')
         }else{
             showLoader();
-            let res=await axios.post("/api/registation",{
+            let res=await axios.post("/registation",{
                 email:email,
                 firstName:firstName,
                 lastName:lastName,
