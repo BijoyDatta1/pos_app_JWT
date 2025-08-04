@@ -22,6 +22,7 @@ class TokenVerificationMiddleware
             return redirect('/loginpage');
         } else {
             $request->headers->set('email', $result->userEmail);
+            $request->headers->set('id', $result->userId);
             return $next($request);
         }
     }

@@ -7,6 +7,7 @@ use App\Mail\SendOtpMail;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use PHPUnit\Framework\Constraint\Count;
@@ -39,6 +40,10 @@ class UserAutintication extends Controller
     public function resetpasswordPage()
     {
         return view('pages.auth.reset-pass-page');
+    }
+    public function profilePage()
+    {
+        return view('pages.dashboard.profile-page');
     }
 
     //
@@ -89,7 +94,7 @@ class UserAutintication extends Controller
         $user = User::where('email', $request->email)->where('password', $request->password)->first();
 
         if ($user) {
-            $token = JWTToken::createToken($user->email);
+            $token = JWTToken::createToken($user->email, $user->id);
             return response()->json([
                 'status' => 'success',
                 'message' => 'login successfully',
@@ -144,7 +149,7 @@ class UserAutintication extends Controller
         if ($user) {
             $user->update(['otp' => 0]);
             //createToken
-            $token = JWTToken::createToken($user->email, 10);
+            $token = JWTToken::createToken($user->email, 0, 10);
             return response()->json([
                 'status' => 'success',
                 'message' => 'otp verified successfully',
@@ -177,6 +182,48 @@ class UserAutintication extends Controller
 
     public function logout()
     {
-        return redirect('/loginpage')->cookie('token', -1);
+        return redirect('/loginpage')->withCookie(Cookie::forget('token'));
+    }
+
+    public function getProfileValue(Request $request)
+    {
+        $userId =  $request->header('id');
+
+        $user = User::where('id', '=', $userId)->first();
+        if ($user) {
+            return response()->json([
+                'status' => 'success',
+                'data' => $user,
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => 'failed',
+                'message' => "user not found",
+            ]);
+        }
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $userId = $request->header('id');
+
+        try {
+            User::where('id', '=', $userId)->update([
+                'firstName' => $request->firstName,
+                'lastName' => $request->lastName,
+                'email' => $request->email,
+                'password' => $request->password,
+                'mobile' => $request->mobile
+            ]);
+            return redirect()->json([
+                'status' => 'success',
+                'message' => "user update successfull",
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => "user not updated",
+            ]);
+        }
     }
 }

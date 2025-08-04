@@ -30,7 +30,7 @@
                         </div>
                         <div class="row m-0 p-0">
                             <div class="col-md-4 p-2">
-                                <button onclick="onUpdate()" class="btn mt-3 w-100  bg-gradient-primary">Update</button>
+                                <button onclick="" class="btn mt-3 w-100  bg-gradient-primary">Update</button>
                             </div>
                         </div>
                     </div>
@@ -39,5 +39,61 @@
         </div>
     </div>
 </div>
+<script>
+    getProfileValue();
+    async function getProfileValue(){
+        showLoader();
+        $res = await axios.get('/getProfileValue');
+        hideLoader();
+        if($res.status === 200 && $res.data['status'] === 'success'){
+            document.getElementById('firstName').value = $res.data['data']['firstName'];
+            document.getElementById('lastName').value = $res.data['data']['lastName'];
+            document.getElementById('mobile').value = $res.data['data']['mobile'];
+            document.getElementById('password').value = $res.data['data']['password'];
+        }else{
+             let data = res.data.message;
+
+                if(typeof data === 'object'){
+                    for (let key in data) {
+                        errorToast(data[key]);
+                    }
+                }else{
+                    errorToast(data);
+                }
+        }
+
+        async function onUpdate(){
+            let firstName = document.getElementById('firstName').value;
+            let lastName = document.getElementById('lastName').value;
+            let mobile = document.getElementById('mobile').value;
+            let password = document.getElementById('password').value;
+            showLoader();
+                  $res = await axios.post('/updateProfile',{
+                    firstName : firstName,
+                    lastName : lastName,
+                    mobile : mobile,
+                    password : password
+                  });
+            hideLoader();
+
+            if(res.status === 200 && res.data['status'] === 'success'){
+                successToast(res.data['message']);
+                setTimeout(() => {
+                    getProfileValue();
+                }, 2000);
+            }else{
+                let data = res.data.message;
+
+                if(typeof data === 'object'){
+                    for (let key in data) {
+                        errorToast(data[key]);
+                    }
+                }else{
+                    errorToast(data);
+                }
+            }
+        }
+    }
+</script>
 
 
