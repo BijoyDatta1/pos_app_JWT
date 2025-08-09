@@ -30,7 +30,7 @@
                         </div>
                         <div class="row m-0 p-0">
                             <div class="col-md-4 p-2">
-                                <button onclick="" class="btn mt-3 w-100  bg-gradient-primary">Update</button>
+                                <button onclick="onUpdate()" class="btn mt-3 w-100  bg-gradient-primary">Update</button>
                             </div>
                         </div>
                     </div>
@@ -61,14 +61,15 @@
                     errorToast(data);
                 }
         }
+    }
 
-        async function onUpdate(){
+    async function onUpdate(){
             let firstName = document.getElementById('firstName').value;
             let lastName = document.getElementById('lastName').value;
             let mobile = document.getElementById('mobile').value;
             let password = document.getElementById('password').value;
             showLoader();
-                  $res = await axios.post('/updateProfile',{
+                  let res = await axios.post('/updateProfile',{
                     firstName : firstName,
                     lastName : lastName,
                     mobile : mobile,
@@ -92,7 +93,6 @@
                     errorToast(data);
                 }
             }
-        }
     }
 </script>
 

@@ -16,4 +16,31 @@
     </div>
 </div>
 
+<script>
+    async function itemDelete(){
+        let id = document.getElementById('deleteID').value;
+        showLoader();
+        let res = await axios.post('/categorydelete',{
+            id:id
+        });
+        hideLoader();
+
+        if(res.status === 200 && res.data['status'] === 'success'){
+            successToast(res.data['message']);
+            document.getElementById('delete-modal-close').click();
+            await getlist();
+        }else{
+            let data = res.data.message;
+
+                if(typeof data === 'object'){
+                    for (let key in data) {
+                        errorToast(data[key]);
+                    }
+                }else{
+                    errorToast(data);
+                }
+        }
+    }
+</script>
+
 

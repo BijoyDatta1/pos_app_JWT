@@ -24,5 +24,36 @@
     </div>
 </div>
 
+<script>
+    async function Save() {
+        let category_name = document.getElementById('categoryName').value;
+        if(category_name.length === 0){
+            errorToast('Please Enter The Category')
+        }else{
+            showLoader();
+            let res = await axios.post('/categorycreate',{
+                category_name : category_name
+            });
+            hideLoader();
+            if(res.status === 200 && res.data['status'] === 'success'){
+                successToast(res.data['message']);
+                document.getElementById("save-form").reset();
+                document.getElementById('modal-close').click();
+                await getlist();
+            }else{
+                let data = res.data.message;
+
+                if(typeof data === 'object'){
+                    for (let key in data) {
+                        errorToast(data[key]);
+                    }
+                }else{
+                    errorToast(data);
+                }
+            }
+        }
+    }
+</script>
+
 
 

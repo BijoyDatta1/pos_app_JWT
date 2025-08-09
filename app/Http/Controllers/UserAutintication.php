@@ -98,6 +98,7 @@ class UserAutintication extends Controller
             return response()->json([
                 'status' => 'success',
                 'message' => 'login successfully',
+                'token' => $token
             ], 200)->cookie('token', $token, 60);
         } else {
             return response()->json([
@@ -211,11 +212,10 @@ class UserAutintication extends Controller
             User::where('id', '=', $userId)->update([
                 'firstName' => $request->firstName,
                 'lastName' => $request->lastName,
-                'email' => $request->email,
                 'password' => $request->password,
                 'mobile' => $request->mobile
             ]);
-            return redirect()->json([
+            return response()->json([
                 'status' => 'success',
                 'message' => "user update successfull",
             ], 200);

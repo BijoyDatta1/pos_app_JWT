@@ -82,7 +82,7 @@
         <span class="side-bar-item-caption">Customer</span>
     </a>
 
-    <a href="{{url("/categoryPage")}}" class="side-bar-item">
+    <a href="{{url("/categorypage")}}" class="side-bar-item">
         <i class="bi bi-list-nested"></i>
         <span class="side-bar-item-caption">Category</span>
     </a>
@@ -117,23 +117,6 @@
 
 
 
-<script>
-    function MenuBarClickHandler() {
-        let sideNav = document.getElementById('sideNavRef');
-        let content = document.getElementById('contentRef');
-        if (sideNav.classList.contains("side-nav-open")) {
-            sideNav.classList.add("side-nav-close");
-            sideNav.classList.remove("side-nav-open");
-            content.classList.add("content-expand");
-            content.classList.remove("content");
-        } else {
-            sideNav.classList.remove("side-nav-close");
-            sideNav.classList.add("side-nav-open");
-            content.classList.remove("content-expand");
-            content.classList.add("content");
-        }
-    }
-</script>
 
 </body>
 </html>

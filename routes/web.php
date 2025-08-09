@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\UserAutintication;
 use App\Http\Middleware\TokenVerificationMiddleware;
 use Illuminate\Support\Facades\Route;
@@ -31,3 +32,11 @@ Route::get('/sendotppage', [UserAutintication::class, 'sendotpPage']);
 Route::get('/verifyotppage', [UserAutintication::class, 'verifyotpPage']);
 Route::get('/resetpasswordpage', [UserAutintication::class, 'resetpasswordPage'])->middleware(TokenVerificationMiddleware::class);;
 Route::get('/dashboard', [UserAutintication::class, 'dashboard'])->middleware(TokenVerificationMiddleware::class);
+
+//category
+Route::get('/categorypage', [CategoryController::class, 'categoryPage'])->middleware(TokenVerificationMiddleware::class);
+Route::get('/getallcategory', [CategoryController::class, 'getall'])->middleware(TokenVerificationMiddleware::class);
+Route::post('/categorycreate', [CategoryController::class, 'categoryCreate'])->middleware(TokenVerificationMiddleware::class);
+Route::post('/categoryupdate', [CategoryController::class, 'categoryUpdate'])->middleware(TokenVerificationMiddleware::class);
+Route::post('/categorydelete', [CategoryController::class, 'CategoryDelete'])->middleware(TokenVerificationMiddleware::class);
+Route::post('/getcategoryitem', [CategoryController::class, 'getItem'])->middleware(TokenVerificationMiddleware::class);

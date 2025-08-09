@@ -30,6 +30,69 @@
 </div>
 </div>
 
+ <script>
+    getlist();
+    async function getlist(){
+        showLoader();
+        let req = await axios.get('/getallcategory');
+        hideLoader();
+
+        let tableData = $("#tableData");
+        let tableList = $("#tableList");
+
+        tableData.DataTable().destroy();
+        tableList.empty();
+
+        req.data.category.forEach(function(item,index){
+            let row = `<tr>
+                    <td>${index + 1}</td>
+                    <td>${item['category_name']}</td>
+                    <td>
+                        <button type="button" data-id = ${item['id']} class="btn EditBtn btn-warning">Edit</button>
+                        <button type="button" data-id = ${item['id']} class="btn DeleteBtn btn-danger">Delete</button>
+                    </td>
+                </tr>`
+            tableList.append(row);
+        });
+
+        
+        new DataTable('#tableData', {
+            order:[[0,'desc']],
+            lengthMenu:[5,10,15,20,30]
+        });
+
+
+        let DeleteButtons = document.querySelectorAll(".DeleteBtn");
+        DeleteButtons.forEach(function(button){
+            button.addEventListener("click", function(){
+                let id = this.getAttribute("data-id");
+                let modal = new bootstrap.Modal(document.getElementById('delete-modal'));
+                modal.show();
+                document.getElementById('deleteID').value = id;
+            })
+        })
+
+        let UpdateButton = document.querySelectorAll(".EditBtn");
+        UpdateButton.forEach(function(button){
+            button.addEventListener('click',function(){
+                let id  = this.getAttribute('data-id');
+                let modal = new bootstrap.Modal(document.getElementById("update-modal"));
+                modal.show();
+                FillUpUPdateForm(id);
+            })
+        })
+
+        //     $('.editBtn').on('click', async function () {
+        //    let id= $(this).data('id');
+        //    await FillUpUpdateForm(id)
+        //    $("#update-modal").modal('show');
+        //     })
+    }
+
+
+        
+ </script>
+
 
 
 

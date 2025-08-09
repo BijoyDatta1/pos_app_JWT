@@ -25,5 +25,56 @@
     </div>
 </div>
 
+<script>
+    async function  FillUpUPdateForm(id){
+        document.getElementById("updateID").value = id;
+        showLoader();
+        let res = await axios.post("/getcategoryitem",{
+            id : id
+        })
+        hideLoader();
+
+        if(res.status === 200 && res.data['status'] === 'success'){
+            // console.log(res.data['category']['category_name']);
+            document.getElementById('categoryNameUpdate').value = res.data['category']['category_name'];
+        }else{
+            let data = res.data.message;
+
+            if(typeof data === 'object'){
+                for (let key in data) {
+                 errorToast(data[key]);
+                }
+            }else{
+                errorToast(data);
+            }
+        }
+    }
+
+    async function Update(){
+        let category_name = document.getElementById("categoryNameUpdate").value;
+        let id = document.getElementById("updateID").value;
+        let res = await axios.post("/categoryupdate",{
+            category_name : category_name,
+            id : id
+        });
+
+        if(res.status === 200 && res.data['status'] === 'success'){
+            successToast(res.data['message']);
+            document.getElementById('update-modal-close').click();
+            await getlist();
+        }else{
+            let data = res.data.message;
+
+            if(typeof data === 'object'){
+                for (let key in data) {
+                 errorToast(data[key]);
+                }
+            }else{
+                errorToast(data);
+            }
+        }
+    }
+</script>
+
 
 
