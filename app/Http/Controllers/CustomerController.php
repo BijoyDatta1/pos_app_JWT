@@ -59,7 +59,6 @@ class CustomerController extends Controller
             return response()->json([
                 'status' => 'success',
                 'message' => "Customer Create Successfully",
-                'Customer' => $create
             ], 200);
         } else {
             return response()->json([

@@ -37,9 +37,11 @@
         let req = await axios.get('/getallcategory');
         hideLoader();
 
+         //for use the jqurey dataTable id selected by jqurey
         let tableData = $("#tableData");
         let tableList = $("#tableList");
-
+        
+        //DataTable(),empty() and destroy() fucntion from jqurey Data Table plagin. those function fast distroy the table and then empty the table
         tableData.DataTable().destroy();
         tableList.empty();
 
@@ -55,7 +57,7 @@
             tableList.append(row);
         });
 
-        
+        //jqurey data table plagin 
         new DataTable('#tableData', {
             order:[[0,'desc']],
             lengthMenu:[5,10,15,20,30]
