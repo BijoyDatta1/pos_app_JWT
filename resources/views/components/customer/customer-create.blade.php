@@ -30,9 +30,9 @@
 
 <script>
     async function Save(){
-        let customerName = document.getElementById("customerName");
-        let customerEmail = document.getElementById("customerEmail");
-        let customerMobile = document.getElementById("customerMobile");
+        let customerName = document.getElementById("customerName").value;
+        let customerEmail = document.getElementById("customerEmail").value;
+        let customerMobile = document.getElementById("customerMobile").value;
 
         if(customerName.length === 0){
             errorToast("please Enter the Customer Name");

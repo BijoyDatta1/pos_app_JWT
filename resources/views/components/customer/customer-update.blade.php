@@ -31,5 +31,62 @@
         </div>
     </div>
 </div>
+<script>
+    async function FillUpUPdateForm(id){
+        showLoader();
+        let res = await axios.post('/getcustomeritem',{
+            id:id
+        });
+        hideLoader();
+        if(res.status === 200 && res.data['status'] === 'success'){
+            console.log(res.data['customer']['customerName']);
+            document.getElementById('customerNameUpdate').value = res.data['customer']['customerName'];
+            document.getElementById('customerEmailUpdate').value = res.data['customer']['customerEmail'];
+            document.getElementById('customerMobileUpdate').value = res.data['customer']['customerMobile'];
+            document.getElementById('updateID').value = res.data['customer']['id'];
+        }else{
+            let data = res.data.message;
 
+                if(typeof data === 'object'){
+                    for (let key in data) {
+                        errorToast(data[key]);
+                    }
+                }else{
+                    errorToast(data);
+                }
+        }
+    }
+
+    async function Update(){
+        let customerName = document.getElementById('customerNameUpdate').value;
+        let customerEmail = document.getElementById('customerEmailUpdate').value;
+        let customerMobile = document.getElementById('customerMobileUpdate').value;
+        let id = document.getElementById('updateID').value;
+
+        showLoader();
+        let res = await axios.post('/customerupdate',{
+            customerName:customerName,
+            customerEmail:customerEmail,
+            customerMobile:customerMobile,
+            id:id
+        });
+        hideLoader();
+
+        if(res.status === 200 && res.data['status'] === 'success'){
+            successToast(res.data['message']);
+            document.getElementById('update-modal-close').click();
+            getList();
+        }else{
+            let data = res.data.message;
+
+                if(typeof data === 'object'){
+                    for (let key in data) {
+                        errorToast(data[key]);
+                    }
+                }else{
+                    errorToast(data);
+                }
+        }
+    }
+</script>
 

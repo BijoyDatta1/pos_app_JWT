@@ -64,6 +64,7 @@
         });
 
 
+        //send the id for delete the category and one the boostrap modal
         let DeleteButtons = document.querySelectorAll(".DeleteBtn");
         DeleteButtons.forEach(function(button){
             button.addEventListener("click", function(){
@@ -74,21 +75,17 @@
             })
         })
 
+        //send the id for update the category and one the boostrap modal
         let UpdateButton = document.querySelectorAll(".EditBtn");
         UpdateButton.forEach(function(button){
             button.addEventListener('click',function(){
                 let id  = this.getAttribute('data-id');
                 let modal = new bootstrap.Modal(document.getElementById("update-modal"));
                 modal.show();
+                //this fucntion defined in update modal for get the exciesting data in category database. and fill the the data in the category update modal
                 FillUpUPdateForm(id);
             })
         })
-
-        //     $('.editBtn').on('click', async function () {
-        //    let id= $(this).data('id');
-        //    await FillUpUpdateForm(id)
-        //    $("#update-modal").modal('show');
-        //     })
     }
 
 

@@ -36,7 +36,7 @@ class CustomerController extends Controller
         if ($item) {
             return response()->json([
                 "status" => 'success',
-                "category" => $item
+                "customer" => $item
             ], 200);
         } else {
             return response()->json([

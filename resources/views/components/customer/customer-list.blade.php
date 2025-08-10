@@ -66,7 +66,32 @@
             new DataTable('#tableData', {
             order:[[0,'desc']],
             lengthMenu:[5,10,15,20,30]
-        });
+            });
+
+            //send the id for delete the customer and one the boostrap modal
+            let deleteButtons = document.querySelectorAll('.DeleteBtn');
+            deleteButtons.forEach(function(button){
+                button.addEventListener('click',function(){
+                    let id = this.getAttribute('data-id');
+                    let model = new bootstrap.Modal(document.getElementById('delete-modal'));
+                    model.show();
+                    document.getElementById('deleteID').value = id;
+                })
+            });
+
+            //send the id for update the customer and one the boostrap modal
+            let editButtons = document.querySelectorAll('.EditBtn');
+            editButtons.forEach(function (button){
+                button.addEventListener('click',function(){
+                    let id = this.getAttribute('data-id');
+                    let model = new bootstrap.Modal(document.getElementById('update-modal'));
+                    model.show();
+                    document.getElementById('updateID').value = id;
+                    //this fucntion defined in update modal for get the exciesting data in customer database. and fill the the data in the customer update modal
+                    FillUpUPdateForm(id);
+                })
+            })
+
 
         }else{
             let data = res.data.message;
