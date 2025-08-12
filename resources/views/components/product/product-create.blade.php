@@ -43,6 +43,77 @@
             </div>
     </div>
 </div>
+<script>
+    getCategory();
+    async function getCategory(){
+        showLoader();
+        let req = await axios.get('/getallcategory');
+        hideLoader();
+        let categorySection = document.getElementById('productCategory');
+        if(req.status === 200 && req.data['status'] === 'success'){
+
+            req.data.category.forEach(function(item,index){
+                let row = `<option value="${item['id']}">${item['category_name']}</option>`
+                categorySection.innerHTML += row;
+            })
+
+        }else{
+            let data = res.data.message;
+
+                if(typeof data === 'object'){
+                    for (let key in data) {
+                        errorToast(data[key]);
+                    }
+                }else{
+                    errorToast(data);
+                }
+        }
+    }
+
+    async function Save(){
+        let category_id = document.getElementById('productCategory').value;
+        let productName = document.getElementById('productName').value;
+        let productPrice = document.getElementById('productPrice').value;
+        let productUnit = document.getElementById('productUnit').value;
+        let productImg = document.getElementById('productImg').files[0];
+
+        if(category_id.length === 0){
+            errorToast('Please select a category');
+        }else if(productName.length === 0){
+            errorToast('Please enter product name');
+        }else if(productPrice.length === 0){
+            errorToast('Please enter product price');
+        }else if(productUnit.length === 0){
+            errorToast('Please enter product unit');
+        }else if (!productImg){
+            errorToast('Please select a product image');
+        }else{
+            showLoader();
+            let req = await axios.post('/createproduct',{
+                category_id : category_id,
+                productName : productName,
+                productPrice : productPrice,
+                productUnit : productUnit,
+                productImg : productImg
+            });
+            hideLoader();
+            if(req.status === 200 && req.data['status'] === 'success'){
+                successToast(res.data['message']);
+                document.getElementById('modal-close').click();
+                getList();
+            }else{
+                let data = res.data.message;
+                if(typeof data === 'object'){
+                    for (let key in data) {
+                        errorToast(data[key]);
+                    }
+                }else{
+                    errorToast(data);
+                }
+            }
+        }
+    }
+</script>
 
 
 
