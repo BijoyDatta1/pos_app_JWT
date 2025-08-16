@@ -30,7 +30,7 @@ class ProductController extends Controller
     }
     public function getItem(Request $req)
     {
-        $product = Product::where(['user_id' => $req->header('id'), 'id' => $req->id])->get();
+        $product = Product::where(['user_id' => $req->header('id'), 'id' => $req->id])->first();
         if ($product) {
             return response()->json([
                 'status' => 'success',

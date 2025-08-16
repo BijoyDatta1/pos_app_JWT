@@ -55,8 +55,8 @@
                         <td>${item['productPrice']}</td>
                         <td>${item['productUnit']}</td>
                         <td>
-                            <button type="button" data-id = ${item['id']} class="btn EditBtn btn-warning">Edit</button>
-                            <button type="button" data-id = ${item['id']} class="btn DeleteBtn btn-danger">Delete</button>
+                            <button type="button" data-path =${item['productImg']} data-id = ${item['id']} class="btn EditBtn btn-warning">Edit</button>
+                            <button type="button" data-path =${item['productImg']} data-id = ${item['id']} class="btn DeleteBtn btn-danger">Delete</button>
                         </td>
                     </tr>`
                     tableList.append(row);
@@ -72,6 +72,32 @@
                     errorToast(data);
                 }
          }
+
+         //send the id and image path for delete the product and open the boostrap modal
+            let deleteButtons = document.querySelectorAll('.DeleteBtn');
+            deleteButtons.forEach(function(button){
+                button.addEventListener('click',function(){
+                    let id = this.getAttribute('data-id');
+                    let path = this.getAttribute('data-path');
+                    let model = new bootstrap.Modal(document.getElementById('delete-modal'));
+                    model.show();
+                    document.getElementById('deleteID').value = id;
+                    document.getElementById('deleteFilePath').value =path;
+                })
+            });
+
+             //send the id and image path for update the data and open the boostrap modal
+             let editButtons = document.querySelectorAll('.EditBtn');
+                editButtons.forEach(function (button){
+                button.addEventListener('click',function(){
+                    let id = this.getAttribute('data-id');
+                    let path = this.getAttribute('data-path');
+                    let model = new bootstrap.Modal(document.getElementById('update-modal'));
+                    model.show();
+                    //this fucntion defined in update modal for get the exciesting data in customer database. and fill the the data in the customer update modal
+                    FillUpUPdateForm(id,path);
+                })
+            })
         
 
         //jqurey data table plagin 

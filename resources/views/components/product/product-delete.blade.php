@@ -18,3 +18,31 @@
     </div>
 </div>
 
+<script>
+    async function itemDelete(){
+        let id = document.getElementById("deleteID").value;
+        let productImg = document.getElementById("deleteFilePath").value;
+        showLoader();
+        let req = await axios.post('/deleteproduct',{
+            id:id,
+            productImg:productImg
+        });
+        hideLoader();
+        if(req.status === 200 && req.data['status'] === 'success'){
+            successToast(req.data.message);
+            document.getElementById('delete-modal-close').click();
+            await getList();
+
+        }else{
+                let data = req.data.message;
+                if(typeof data === 'object'){
+                    for (let key in data) {
+                        errorToast(data[key]);
+                    }
+                }else{
+                    errorToast(data);
+                }
+        }
+    }
+</script>
+

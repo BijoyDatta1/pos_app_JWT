@@ -31,7 +31,6 @@
                                 <input oninput="oldImg.src=window.URL.createObjectURL(this.files[0])"  type="file" class="form-control" id="productImgUpdate">
 
                                 <input type="text" class="d-none" id="updateID">
-                                <input type="text" class="d-none" id="filePath">
 
 
                             </div>
@@ -48,5 +47,116 @@
         </div>
     </div>
 </div>
+<script>
+    getCategory();
+    async function getCategory(){
+        showLoader();
+        let req = await axios.get('/getallcategory');
+        hideLoader();
+        let categorySection = document.getElementById('productCategoryUpdate');
+        if(req.status === 200 && req.data['status'] === 'success'){
+
+            req.data.category.forEach(function(item,index){
+                let row = `<option value="${item['id']}">${item['category_name']}</option>`
+                categorySection.innerHTML += row;
+            })
+
+        }else{
+            let data = req.data.message;
+
+                if(typeof data === 'object'){
+                    for (let key in data) {
+                        errorToast(data[key]);
+                    }
+                }else{
+                    errorToast(data);
+                }
+        }
+    }
+
+    async function FillUpUPdateForm(id,path){
+        document.getElementById('updateID').value = id;
+
+        showLoader();
+        let req = await axios.post('/getproductitem',{
+            id:id
+        });
+        hideLoader();
+        if(req.status === 200 && req.data['status'] === 'success'){
+            let product = req.data['data'];
+            let pathRevice = `/uploads/${path}`;
+            
+            document.getElementById('productNameUpdate').value = product['productName'];
+            document.getElementById('productPriceUpdate').value = product['productPrice'];
+            document.getElementById('productUnitUpdate').value = product['productUnit'];
+            document.getElementById('productCategoryUpdate').value = product['category_id'];
+            document.getElementById('oldImg').src = pathRevice;
+
+
+        }else{
+            let data = req.data.message;
+
+            if(typeof data === 'object'){
+                for (let key in data) {
+                    errorToast(data[key]);
+                }
+            }else{
+                    errorToast(data);
+            }
+        }
+
+    }
+
+    async function update(){
+        let id = document.getElementById('updateID').value;
+        let productName = document.getElementById('productNameUpdate').value;
+        let productPrice =  document.getElementById('productPriceUpdate').value;
+        let productUnit = document.getElementById('productUnitUpdate').value;
+        let category_id = document.getElementById('productCategoryUpdate').value;
+        let productImg = document.getElementById('productImgUpdate').files[0];
+
+        if(productName.length === 0){
+            errorToast('Please Enter the Product Name')
+        }else if(productPrice.length === 0){
+            errorToast('Please Enter the Product Price')
+        }else if (productUnit.length === 0){
+            errorToast('Please Enter the Product Unit')
+        }else if (category_id.length === 0){
+            errorToast('Please Enter the Product Category')
+        }else{
+            showLoader();
+            let formData = new FormData();
+            formData.append('id', id);
+            formData.append('productName', productName);
+            formData.append('productPrice', productPrice);
+            formData.append('productUnit', productUnit);
+            formData.append('category_id', category_id);
+            formData.append('productImg', productImg);
+            let req = await axios.post('/updateproduct',formData,{
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            hideLoader();
+
+            if(req.status === 200 && req.data['status'] === 'success'){
+                successToast(req.data['message']);
+                document.getElementById('update-form').reset();
+                document.getElementById('update-modal-close').click();
+                await getList();
+            }else{
+                let data = req.data.message;
+
+                if(typeof data === 'object'){
+                    for (let key in data) {
+                        errorToast(data[key]);
+                    }
+                }else{
+                        errorToast(data);
+                }
+            }
+        }
+    }
+</script>
 
 

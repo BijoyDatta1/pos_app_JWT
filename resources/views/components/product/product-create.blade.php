@@ -89,20 +89,27 @@
             errorToast('Please select a product image');
         }else{
             showLoader();
-            let req = await axios.post('/createproduct',{
-                category_id : category_id,
-                productName : productName,
-                productPrice : productPrice,
-                productUnit : productUnit,
-                productImg : productImg
+
+             let formData = new FormData();
+            formData.append("category_id", category_id);
+            formData.append("productName", productName);
+            formData.append("productPrice", productPrice);
+            formData.append("productUnit", productUnit);
+            formData.append("productImg", productImg);
+
+            let req = await axios.post("/createproduct", formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data"
+                }
             });
             hideLoader();
             if(req.status === 200 && req.data['status'] === 'success'){
-                successToast(res.data['message']);
+                successToast(req.data['message']);
+                document.getElementById("save-form").reset();
                 document.getElementById('modal-close').click();
-                getList();
+                await getList();
             }else{
-                let data = res.data.message;
+                let data = req.data.message;
                 if(typeof data === 'object'){
                     for (let key in data) {
                         errorToast(data[key]);
