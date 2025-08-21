@@ -2,6 +2,8 @@
 @section('content')
     <div class="container-fluid">
         <div class="row">
+
+            {{-- sale calculation section --}}
             <div class="col-md-4 col-lg-4 p-2">
                 <div class="shadow-sm h-100 bg-white rounded-3 p-3">
                     <div class="row">
@@ -56,6 +58,7 @@
                 </div>
             </div>
 
+            {{-- pick product --}}
             <div class="col-md-4 col-lg-4 p-2">
                 <div class="shadow-sm h-100 bg-white rounded-3 p-3">
                     <table class="table  w-100" id="productTable">
@@ -72,6 +75,7 @@
                 </div>
             </div>
 
+            {{-- pick customer --}}
             <div class="col-md-4 col-lg-4 p-2">
                 <div class="shadow-sm h-100 bg-white rounded-3 p-3">
                     <table class="table table-sm w-100" id="customerTable">
@@ -129,14 +133,18 @@
 
     <script>
 
+        
 
+        
         (async ()=>{
+            /*
           showLoader();
           await  CustomerList();
           await ProductList();
           hideLoader();
+          */
         })()
-
+          
 
         let InvoiceItemList=[];
 

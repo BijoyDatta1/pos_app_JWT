@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\SaleController;
 use App\Http\Controllers\UserAutintication;
 use App\Http\Middleware\TokenVerificationMiddleware;
 use Illuminate\Support\Facades\Route;
@@ -58,3 +60,12 @@ Route::post('/createproduct', [ProductController::class, 'createProduct'])->midd
 Route::post('/updateproduct', [ProductController::class, 'updateProduct'])->middleware(TokenVerificationMiddleware::class);
 Route::post('/deleteproduct', [ProductController::class, 'deleteProduct'])->middleware(TokenVerificationMiddleware::class);
 Route::post('/getproductitem', [ProductController::class, 'getItem'])->middleware(TokenVerificationMiddleware::class);
+
+
+//invoice
+Route::get('/invoicepage', [InvoiceController::class, 'invoicePage'])->middleware(TokenVerificationMiddleware::class);
+Route::get('/salepage', [InvoiceController::class, 'salePage'])->middleware(TokenVerificationMiddleware::class);
+Route::post('/createinvoice', [InvoiceController::class, 'createInvoice'])->middleware(TokenVerificationMiddleware::class);
+Route::post('/deleteinvoice', [InvoiceController::class, 'deleteInvoice'])->middleware(TokenVerificationMiddleware::class);
+
+//report
