@@ -34,14 +34,14 @@ class InvoiceController extends Controller
                 'discount' => $req->discount
             ]);
             $invoice_id = $invoice->id;
-            $products = $req->product;
+            $products = $req->product; // {"productId" : productId,"productName" : productName,"productPrice":productPrice,"ProductQnt":ProductQnt,"ProductTotalPrice":ProductTotalPrice}
             foreach ($products as $eachProduct) {
-                InvoiceProduct::created([
+                InvoiceProduct::create([
                     "invoice_id" => $invoice_id,
                     "user_id" => $req->header('id'),
-                    "product_id" => $eachProduct["product_id"],
-                    "qty" => $eachProduct["qty"],
-                    "sale_price" => $eachProduct["sale_price"]
+                    "product_id" => $eachProduct["productId"],
+                    "qty" => $eachProduct["ProductQnt"],
+                    "sale_price" => $eachProduct["ProductTotalPrice"]
 
                 ]);
             }
@@ -50,7 +50,7 @@ class InvoiceController extends Controller
             return response()->json([
                 'status' => 'success',
                 'message' => " Invoice Created Successfully",
-            ]);
+            ], 200);
         } catch (Exception $e) {
             DB::rollBack();
             return response()->json([
@@ -64,8 +64,8 @@ class InvoiceController extends Controller
     {
         DB::beginTransaction();
         try {
-            InvoiceProduct::where('user_id', '=', $req->header('id'))->where('invoice_id', '=', $req->invoice_id)->delete();
-            Invoice::where('user_id', '=', $req->header('id'))->where('id', '=', $req->id)->delete();
+            InvoiceProduct::where('user_id', $req->header('id'))->where('invoice_id', $req->invoice_id)->delete();
+            Invoice::where('user_id', $req->header('id'))->where('id', $req->invoice_id)->delete();
             DB::commit();
             return response()->json([
                 'status' => 'success',
