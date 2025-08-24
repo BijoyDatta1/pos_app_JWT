@@ -70,12 +70,29 @@ class InvoiceController extends Controller
             return response()->json([
                 'status' => 'success',
                 'message' => " Invoice Delete Successfully",
-            ]);
+            ], 200);
         } catch (Exception $e) {
             DB::rollBack();
             return response()->json([
                 'status' => 'faield',
                 'message' => " Invoice Delete Failed",
+            ]);
+        }
+    }
+
+    public function GetAllInvoice(Request $req)
+    {
+        $data = Invoice::Where('user_id', $req->header('id'))->with('customer')->get();
+        if ($data) {
+            return response()->json([
+                'status' => 'success',
+                'message' => " All Invoice ",
+                'data' => $data
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => 'failed',
+                'message' => " Invoice Not Found",
             ]);
         }
     }
