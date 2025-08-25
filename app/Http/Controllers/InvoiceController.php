@@ -96,4 +96,14 @@ class InvoiceController extends Controller
             ]);
         }
     }
+
+    public function getInvoiceDetails(Request $req)
+    {
+        $Invoice_customer = Invoice::where("user_id", $req->header('id'))->where('id', $req->invoice_id)->with('customer')->get();
+        $Product = InvoiceProduct::where("user_id", $req->header('id'))->where('invoice_id', $req->invoice_id)->with('product')->get();
+        return response()->json([
+            "Inv_cus" => $Invoice_customer,
+            "Product" => $Product
+        ]);
+    }
 }

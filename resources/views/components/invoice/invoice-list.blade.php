@@ -78,6 +78,16 @@
                     let myModal = new bootstrap.Modal(document.getElementById('delete-modal'));
                     myModal.show();
                 })
+            });
+
+            let viewButtons = document.querySelectorAll('.viewBtn');
+            viewButtons.forEach(function(button){
+                button.addEventListener('click',function(){
+                let Modal = new bootstrap.Modal(document.getElementById('details-modal'));
+                Modal.show();
+                let id = this.getAttribute('data-id');
+                getDetails(id);
+                })
             })
 
             //jqurey data table plagin 
@@ -94,7 +104,7 @@
                 }
             }else{
                    errorToast(data);
-                }
+            }
         }
     }
 </script>

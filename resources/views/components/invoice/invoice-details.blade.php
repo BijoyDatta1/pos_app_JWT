@@ -58,5 +58,46 @@
         </div>
     </div>
 </div>
+<script>
+    async function getDetails(id){
+        showLoader();
+        let req = await axios.post("/invoicedetail",{
+            'invoice_id' : id
+        });
+        hideLoader();
+        document.getElementById('total').innerText = req.data['Inv_cus'][0]['total'];
+        document.getElementById('payable').innerText = req.data['Inv_cus'][0]['payable'];
+        document.getElementById('vat').innerText = req.data['Inv_cus'][0]['vat'];
+        document.getElementById('discount').innerText = req.data['Inv_cus'][0]['discount'];
+        document.getElementById('CName').innerText = req.data['Inv_cus'][0]['customer']['customerName'];
+        document.getElementById('CEmail').innerText = req.data['Inv_cus'][0]['customer']['customerEmail'];
+        document.getElementById('CId').innerText = req.data['Inv_cus'][0]['customer']['id'];
+
+        let tableData = document.getElementById('invoiceTable');
+        let tableList = document.getElementById('invoiceList');
+
+        tableList.innerHTML ="";
+
+        req.data.Product.forEach(function(item, index){
+            let row = `<tr>
+                    <td>${item['product']['productName']}</td>
+                    <td>${item['qty']}</td>
+                    <td>${item['sale_price']}</td>
+                </tr>`
+            tableList.innerHTML += row;
+        })
+    }
+
+     function PrintPage(){
+        let PrintContent = document.getElementById('invoice').innerHTML;
+        let OriginalConten = document.body.innerHTML;
+        document.body.innerHTML = PrintContent;
+        window.print();
+        document.body.innerHTML = OriginalConten;
+        setTimeout(() => {
+            location.reload();
+        }, 1000);
+     }
+</script>
 
 
